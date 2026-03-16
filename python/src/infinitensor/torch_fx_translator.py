@@ -14,6 +14,7 @@ from torch.export import export, Dim
 from typing import Callable, Dict, List, Tuple, Optional, Union
 from .converter import registry
 import inspect
+import re
 
 
 class TorchFXTranslator:
@@ -161,9 +162,9 @@ class TorchFXTranslator:
                 self.nodes_map[node] = function
                 function(self, node)
             except Exception as e:
-                raise RuntimeError(f"Converter for {func_name} failed: {str(e)}")
+                raise RuntimeError(f"Converter for {op_name} failed: {str(e)} args: {node.args} kwargs: {node.kwargs}")
         else:
-            raise ValueError(f"Unsupported function: {func_name}")
+            raise ValueError(f"Unsupported function: {op_name}")
 
     def _process_output(self, node):
         """Handle output nodes"""
@@ -257,7 +258,7 @@ class TorchFXTranslator:
         return fake_inputs
 
     def import_from_fx(
-        self, model, input_list: List[torch.Tensor], is_real_tensor: bool = False
+        self, model, input_list: List[torch.Tensor], is_real_tensor: bool = False, dynamic_shapes: bool = True
     ):
         """
         Import FX graph to computation graph framework
@@ -268,10 +269,10 @@ class TorchFXTranslator:
         """
 
         self.builder = GraphBuilder(self.runtime)
-        dynamic_shapes = self._add_dynamic_shapes(model, input_list)
+        dyn_shapes = self._add_dynamic_shapes(model, input_list) if dynamic_shapes else None
         try:
             self.module = export(
-                model, tuple(input_list), dynamic_shapes=dynamic_shapes
+                model, tuple(input_list), dynamic_shapes=dyn_shapes
             )
         except:
             raise RuntimeError("Failed to export the PyTorch model to FX.")
