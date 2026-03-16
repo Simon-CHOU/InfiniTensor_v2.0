@@ -1,10 +1,15 @@
-import onnx
+import pytest
 import torch
+import torch.nn as nn
 import numpy as np
-from infinitensor import backend
-from infinitensor import onnx as backend_onnx
+import infinitensor
+from infinitensor import TorchFXTranslator, Runtime, DeviceType
 
-def test_clip():
+def test_clip(runtime, torch_rng_seed):
+    """Test the Clip operator integration."""
+    print(f"Testing with runtime on device: {runtime}")
+    print(f"Random seed: {torch_rng_seed}")
+
     # Construct a simple graph with Clip operator
     class ClipModule(torch.nn.Module):
         def __init__(self):
@@ -14,18 +19,34 @@ def test_clip():
             return torch.clamp(x, min=-1.0, max=1.0)
 
     model = ClipModule()
-    input_shape = (1, 3, 224, 224)
-    input_data = torch.randn(input_shape)
     
-    # Export to ONNX
-    torch.onnx.export(model, input_data, "clip_test.onnx", input_names=["input"], output_names=["output"])
+    # Create input tensor
+    input_shape = (5, 4)
+    input_tensor = torch.randn(input_shape, dtype=torch.float32)
+    
+    # Expected output from PyTorch
+    expected_output = model(input_tensor).numpy()
 
-    # Run with InfiniTensor
-    # Note: This requires the backend to support ONNX loading and execution which might not be fully ready yet
-    # For unit testing the operator registration and kernel, we can use the internal graph builder API if exposed
+    # Create translator
+    translator = TorchFXTranslator(runtime)
+    translator.import_from_fx(model, [input_tensor])
     
-    # Placeholder for actual verification once the runtime is fully integrated
-    print("Clip operator test placeholder passed")
+    # Run
+    translator.run([input_tensor])
+
+    # Get outputs
+    outputs = translator.get_outputs()
+
+    # Verify
+    assert len(outputs) == 1
+    actual_output = outputs[0].numpy()
+    assert actual_output.shape == expected_output.shape
+    
+    # Use np.allclose for element-wise comparison with a tolerance
+    np.testing.assert_allclose(actual_output, expected_output, rtol=1e-5, atol=1e-4)
+    print("✅ Clip operator test passed!")
 
 if __name__ == "__main__":
-    test_clip()
+    import sys
+    exit_code = pytest.main([__file__, "-v", "-s"])
+    sys.exit(0 if exit_code == 0 else 1)

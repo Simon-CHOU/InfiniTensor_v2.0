@@ -7,15 +7,17 @@
 
 | 编号 | Story 标题 | 状态 | 剩余工作量 (天) | 负责人 | 关联 AC / 备注 |
 |---|---|---|---|---|---|
-| Story-1 | InfiniCore 算子接口定义与底层注册 | 待开始 | 1 | Simon | C-API契约, 90%单测覆盖, clang-format |
-| Story-2 | InfiniTensor_v2.0 算子接口定义与注册 | 待开始 | 1.5 | Simon | IR定义(.def), 形状/类型推导, 90%单测覆盖 |
-| Story-3 | InfiniCore 后端 Kernel 实现 (RTX2060) | 待开始 | 2 | Simon | FP32/FP16, 精度达标, 性能基线≤110%, nsys报告 |
-| Story-4 | InfiniTensor_v2.0 后端 Kernel 调用映射 | 待开始 | 1 | Simon | `compute()` 桥接, 精度透传, clang-format |
-| Story-5 | InfiniCore 多平台架构预留 | 待开始 | 1 | Simon | muxi/tianshu/moore 预留, CMake BACKEND支持 |
-| Story-6 | InfiniTensor_v2.0 单平台冒烟验证 | 待开始 | 1.5 | Simon | pytest, 静态/动态/边界shape, 无CUDA error |
-| Final | 完整冒烟测试与 `judge.md` 交付 | 待开始 | 0.5 | Simon | - |
+| Story-1 | InfiniCore 算子接口定义与底层注册 | 已完成 | 0 | Simon | C-API契约, 90%单测覆盖, clang-format |
+| Story-2 | InfiniTensor_v2.0 算子接口定义与注册 | 已完成 | 0 | Simon | IR定义(.def), 形状/类型推导, 90%单测覆盖 |
+| Story-3 | InfiniCore 后端 Kernel 实现 (RTX2060) | 已完成 | 0 | Simon | FP32/FP16, 精度达标, 性能基线≤110%, nsys报告 |
+| Story-4 | InfiniTensor_v2.0 后端 Kernel 调用映射 | 已完成 | 0 | Simon | `compute()` 桥接, 精度透传, clang-format |
+| Story-5 | InfiniCore 多平台架构预留 | 已完成 | 0 | Simon | muxi/tianshu/moore 预留, CMake BACKEND支持 |
+| Story-6 | InfiniTensor_v2.0 单平台冒烟验证 | 已完成 | 0 | Simon | pytest, 静态/动态/边界shape, 无CUDA error |
+| Story-7 | 前端 API 绑定与 PyTorch FX 映射 | 已完成 | 0 | Simon | FX转换对接, pybind绑定 |
+| Story-8 | 端到端正确性验证与测试实化 | 已完成 | 0 | Simon | `np.allclose`误差对比 |
+| Final | 完整冒烟测试与 `judge.md` 交付 | 已完成 | 0 | Simon | - |
 
-**当前总剩余工作量**：约 8.5 人日。
+**当前总剩余工作量**：约 0 人日。
 
 ### 风险日志 (Risk Log)
 

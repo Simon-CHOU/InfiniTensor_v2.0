@@ -27,9 +27,33 @@ def convert_sub(translator, node):
     b = translator.tensors[node.args[1]]
     translator.tensors[node] = translator.builder.sub(a, b, None)
 
-@registry.register("clamp","Tensor")
+@registry.register("clamp","default")
 def convert_clip(translator, node):
-    input = translator.tensors[node.args[0]]
-    min = translator.tensors[node.args[1]]
-    max = translator.tensors[node.args[2]]
-    translator.tensors[node] = translator.builder.clip(input, min, max, None)
+    import torch
+    from pyinfinitensor import ShapeExpr, dtype_from_string
+    
+    input_tensor = translator.tensors[node.args[0]]
+    
+    def get_or_create_tensor(val, name_suffix):
+        if isinstance(val, torch.fx.Node):
+            return translator.tensors[val]
+        else:
+            # It's a scalar or constant, create a tensor
+            t_val = torch.tensor([val], dtype=torch.float32)
+            # keep reference to prevent GC
+            if not hasattr(translator, "constant_tensors"):
+                translator.constant_tensors = []
+            translator.constant_tensors.append(t_val)
+            
+            dtype = dtype_from_string(str(t_val.dtype))
+            inf_tensor = translator.builder.tensor(ShapeExpr(list(t_val.shape)), dtype)
+            inf_tensor.set_data(t_val.data_ptr(), translator.runtime)
+            return inf_tensor
+
+    min_val = node.args[1] if len(node.args) > 1 else node.kwargs.get('min')
+    max_val = node.args[2] if len(node.args) > 2 else node.kwargs.get('max')
+    
+    min_tensor = get_or_create_tensor(min_val, "min")
+    max_tensor = get_or_create_tensor(max_val, "max")
+    
+    translator.tensors[node] = translator.builder.clip(input_tensor, min_tensor, max_tensor, None)
