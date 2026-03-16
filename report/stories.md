@@ -161,3 +161,29 @@
 **4. 预计工作量与优先级**
 - **预计工作量**：3 人日
 - **优先级**：高 (P0)
+
+---
+
+## Story 13: 任务十三 - 算子添加大满贯 (Grand Slam)
+
+**1. 明确的业务价值与验收标准 (Definition of Done)**
+- **业务价值**：完成项目文档中列出的所有剩余备选算子，达成“满星”评分。包括 `Softmax`, `LogSoftmax`, `LpNorm`, `RMSNorm` 以及 `UnaryOps` (Relu, Sigmoid, Silu, Gelu, Softplus, Tanh)。
+- **验收标准 (DoD)**：
+  - InfiniTensor_v2.0 后端实现所有剩余算子的图节点定义与 Kernel 映射。
+  - InfiniTensor_v2.0 前端完成 Python 绑定与 FX 转换器支持。
+  - 所有新增算子的端到端测试 (`test_softmax.py`, `test_unary.py` 等) 通过，且精度达标。
+  - 最终提交包含所有算子实现，无回归错误。
+
+**2. 前置依赖、输入输出及接口变动清单**
+- **前置依赖**：InfiniCore 已确认包含所有相关算子的头文件与实现。
+- **提交物**：
+  - `src/operators/` 与 `src/kernels/` 的 C++ 拓展。
+  - `python/src/infinitensor/converter/` 的 Python 拓展。
+  - 全面的端到端测试文件。
+
+**3. 测试策略与回归范围**
+- **测试策略**：继续沿用 TDD 模式，先写测试再实现。针对 Unary 算子可以使用参数化测试减少代码冗余。
+
+**4. 预计工作量与优先级**
+- **预计工作量**：5 人日 (实际上由于模式统一，可大幅压缩)
+- **优先级**：最高 (P0)
