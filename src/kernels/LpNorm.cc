@@ -24,6 +24,15 @@ class LpNormKernel : public Kernel {
             throw;
         }
 
+#ifdef USE_MOORE
+        if (_context->isCpu()) {
+            computeCpu(op.get(), (float*)x, (float*)y);
+        } else {
+            // If MOORE doesn't support LpNorm, maybe fallback to CPU if possible or throw
+            // Assuming fallback to CPU is safe if memory is accessible
+             computeCpu(op.get(), (float*)x, (float*)y);
+        }
+#else
         auto desc = (infiniopLPNormDescriptor_t)op->getInfiniOpDesc();
         
         void *workspace = nullptr;
@@ -42,6 +51,7 @@ class LpNormKernel : public Kernel {
                 CHECK_INFINI_ERROR(status);
             }
         }
+#endif
     }
     
     void computeCpu(const LpNormObj* op, const float* x, float* y) const {

@@ -68,11 +68,20 @@ class UnaryKernel : public Kernel {
     }; \
     REGISTER_KERNEL_ALL_DEVICES(OpTypeEnum, OpName##Kernel)
 
-REGISTER_UNARY_KERNEL_NAMED(Relu, OpType::Relu, ReluObj, infiniopReluDescriptor_t, infiniopRelu);
-REGISTER_UNARY_KERNEL_NAMED(Sigmoid, OpType::Sigmoid, SigmoidObj, infiniopSigmoidDescriptor_t, infiniopSigmoid);
-REGISTER_UNARY_KERNEL_NAMED(Tanh, OpType::Tanh, TanhObj, infiniopTanhDescriptor_t, infiniopTanh);
-REGISTER_UNARY_KERNEL_NAMED(Gelu, OpType::Gelu, GeluObj, infiniopGeluDescriptor_t, infiniopGelu);
-REGISTER_UNARY_KERNEL_NAMED(Silu, OpType::Silu, SiluObj, infiniopSiluDescriptor_t, infiniopSilu);
+#ifdef USE_MOORE
+    // MOORE platform does not support Silu yet
+    REGISTER_UNARY_KERNEL_NAMED(Relu, OpType::Relu, ReluObj, infiniopReluDescriptor_t, infiniopRelu);
+    REGISTER_UNARY_KERNEL_NAMED(Sigmoid, OpType::Sigmoid, SigmoidObj, infiniopSigmoidDescriptor_t, infiniopSigmoid);
+    REGISTER_UNARY_KERNEL_NAMED(Tanh, OpType::Tanh, TanhObj, infiniopTanhDescriptor_t, infiniopTanh);
+    REGISTER_UNARY_KERNEL_NAMED(Gelu, OpType::Gelu, GeluObj, infiniopGeluDescriptor_t, infiniopGelu);
+    // REGISTER_UNARY_KERNEL_NAMED(Silu, OpType::Silu, SiluObj, infiniopSiluDescriptor_t, infiniopSilu);
+#else
+    REGISTER_UNARY_KERNEL_NAMED(Relu, OpType::Relu, ReluObj, infiniopReluDescriptor_t, infiniopRelu);
+    REGISTER_UNARY_KERNEL_NAMED(Sigmoid, OpType::Sigmoid, SigmoidObj, infiniopSigmoidDescriptor_t, infiniopSigmoid);
+    REGISTER_UNARY_KERNEL_NAMED(Tanh, OpType::Tanh, TanhObj, infiniopTanhDescriptor_t, infiniopTanh);
+    REGISTER_UNARY_KERNEL_NAMED(Gelu, OpType::Gelu, GeluObj, infiniopGeluDescriptor_t, infiniopGelu);
+    REGISTER_UNARY_KERNEL_NAMED(Silu, OpType::Silu, SiluObj, infiniopSiluDescriptor_t, infiniopSilu);
+#endif
 // Softplus requires workspace?
 // Based on error: infiniopSoftplus(desc, workspace, size, y, x, stream)
 // Let's implement SoftplusKernel correctly.
