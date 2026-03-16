@@ -48,6 +48,21 @@ DEFINE_BINARY_OP(add, OpType::Add);
 DEFINE_BINARY_OP(sub, OpType::Sub);
 DEFINE_BINARY_OP(mul, OpType::Mul);
 
+Tensor GraphBuilderObj::clip(Tensor input, Tensor min, Tensor max,
+                             std::optional<Tensor> output) {
+    if (output.has_value()) {
+        g->addOpWithOutputs<ElementWiseObj>(OpType::Clip, std::move(input),
+                                            std::move(min), std::move(max),
+                                            std::move(output.value()));
+        return output.value();
+    } else {
+        return g
+            ->addOp<ElementWiseObj>(OpType::Clip, std::move(input),
+                                    std::move(min), std::move(max), nullptr)
+            ->getOutput(0);
+    }
+}
+
 string GraphBuilderObj::printGraph() const { return g->toString(); }
 
 Graph GraphBuilderObj::getGraph() const { return g; }

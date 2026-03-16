@@ -25,6 +25,8 @@ class GraphBuilderObj {
     Tensor add(Tensor A, Tensor B, std::optional<Tensor> Y = std::nullopt);
     Tensor sub(Tensor A, Tensor B, std::optional<Tensor> Y = std::nullopt);
     Tensor mul(Tensor A, Tensor B, std::optional<Tensor> Y = std::nullopt);
+    Tensor clip(Tensor input, Tensor min, Tensor max,
+                std::optional<Tensor> output = std::nullopt);
     string printGraph() const;
 
     Graph getGraph() const;
