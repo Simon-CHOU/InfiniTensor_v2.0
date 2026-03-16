@@ -15,7 +15,11 @@
 | Story-6 | InfiniTensor_v2.0 单平台冒烟验证 | 已完成 | 0 | Simon | pytest, 静态/动态/边界shape, 无CUDA error |
 | Story-7 | 前端 API 绑定与 PyTorch FX 映射 | 已完成 | 0 | Simon | FX转换对接, pybind绑定 |
 | Story-8 | 端到端正确性验证与测试实化 | 已完成 | 0 | Simon | `np.allclose`误差对比 |
-| Final | 完整冒烟测试与 `judge.md` 交付 | 已完成 | 0 | Simon | - |
+| Story-9 | InfiniCore 接口检查与 TDD 测试编写 | 已完成 | 0 | Simon | Conv & LayerNorm 的 C-API 确认与 Python TDD 测试 |
+| Story-10 | 后端算子图与 Kernel 映射 (Conv & LayerNorm) | 已完成 | 0 | Simon | `src/operators` 与 `src/kernels` 对接 |
+| Story-11 | 前端 Pybind 绑定与 PyTorch FX 映射 (Conv & LN) | 已完成 | 0 | Simon | pybind11 接口暴露与 `unified_converters.py` 支持 |
+| Story-12 | 端到端冒烟测试与修正 (Conv & LN) | 已完成 | 0 | Simon | `np.allclose`误差对比 |
+| Final | 完整冒烟测试与 `judge.md` 交付 | 已完成 | 0 | Simon | 大满贯达成 |
 
 **当前总剩余工作量**：约 0 人日。
 

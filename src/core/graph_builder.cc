@@ -63,6 +63,34 @@ Tensor GraphBuilderObj::clip(Tensor input, Tensor min, Tensor max,
     }
 }
 
+Tensor GraphBuilderObj::conv(Tensor input, Tensor weight, std::optional<Tensor> bias,
+                             std::vector<int> pads, std::vector<int> strides,
+                             std::vector<int> dilations, std::optional<Tensor> output) {
+    Tensor b = bias.has_value() ? bias.value() : nullptr;
+    if (output.has_value()) {
+        g->addOpWithOutputs<ConvObj>(std::move(input), std::move(weight),
+                                     std::move(output.value()), std::move(pads),
+                                     std::move(strides), std::move(dilations), std::move(b));
+        return output.value();
+    } else {
+        return g->addOp<ConvObj>(std::move(input), std::move(weight), nullptr,
+                                 std::move(pads), std::move(strides), std::move(dilations), std::move(b))
+            ->getOutput(0);
+    }
+}
+
+Tensor GraphBuilderObj::layer_norm(Tensor input, Tensor weight, Tensor bias, float eps,
+                                   std::optional<Tensor> output) {
+    if (output.has_value()) {
+        g->addOpWithOutputs<LayerNormObj>(std::move(input), std::move(weight), std::move(bias),
+                                          std::move(output.value()), eps);
+        return output.value();
+    } else {
+        return g->addOp<LayerNormObj>(std::move(input), std::move(weight), std::move(bias), nullptr, eps)
+            ->getOutput(0);
+    }
+}
+
 string GraphBuilderObj::printGraph() const { return g->toString(); }
 
 Graph GraphBuilderObj::getGraph() const { return g; }

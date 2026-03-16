@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #ifndef OP_TYPE_H
 #define OP_TYPE_H
 
@@ -13,8 +13,10 @@ struct OpType {
         Cast,
         Clip,
         Concat,
+        Conv,
         Div,
         Gemm,
+        LayerNorm,
         Mul,
         MatMul,
         Relu,
@@ -43,6 +45,8 @@ struct OpType {
             CASE(Div);
             CASE(Cast);
             CASE(Clip);
+            CASE(Conv);
+            CASE(LayerNorm);
             CASE(Relu);
             CASE(Transpose);
             CASE(Concat);

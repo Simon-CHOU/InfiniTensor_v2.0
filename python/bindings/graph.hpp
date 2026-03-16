@@ -29,6 +29,11 @@ void bind_graph_builder(py::module &m) {
              py::arg("Y") = py::none())
         .def("clip", &GraphBuilderObj::clip, py::arg("input"), py::arg("min"),
              py::arg("max"), py::arg("output") = py::none())
+        .def("conv", &GraphBuilderObj::conv, py::arg("input"), py::arg("weight"),
+             py::arg("bias") = py::none(), py::arg("pads"), py::arg("strides"),
+             py::arg("dilations"), py::arg("output") = py::none())
+        .def("layer_norm", &GraphBuilderObj::layer_norm, py::arg("input"), py::arg("weight"),
+             py::arg("bias"), py::arg("eps") = 1e-5, py::arg("output") = py::none())
         .def("to_string", &GraphBuilderObj::printGraph)
         .def_property_readonly("graph", &GraphBuilderObj::getGraph);
 }

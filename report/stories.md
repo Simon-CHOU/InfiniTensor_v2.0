@@ -136,3 +136,28 @@
 **4. 预计工作量与优先级**
 - **预计工作量**：0.5 人日
 - **优先级**：最高 (P0)
+
+---
+
+## Story 6: 任务六 - Conv 与 LayerNorm 算子的全链路集成大满贯
+
+**1. 明确的业务价值与验收标准 (Definition of Done)**
+- **业务价值**：实现项目说明中的“算子备选”满星目标。将 `Conv` 和 `LayerNorm` 从 InfiniCore 底层无缝集成到 InfiniTensor_v2.0 前端，允许用户通过 PyTorch API 直接调用。
+- **验收标准 (DoD)**：
+  - InfiniTensor_v2.0 C++ 层定义 `Conv` 与 `LayerNorm` 的算子图节点 (Shape/Dtype推导) 及 Kernel 映射。
+  - InfiniTensor_v2.0 Python 层完成 FX 转换映射及 Pybind 绑定。
+  - `test_conv.py` 与 `test_layernorm.py` 端到端测试通过（与 PyTorch 原生算子做 `np.allclose` 对比，精度达标）。
+
+**2. 前置依赖、输入输出及接口变动清单**
+- **前置依赖**：InfiniCore 已存在 `conv` 和 `layer_norm` 的底层实现。
+- **提交物**：
+  - `src/operators/` 与 `src/kernels/` 的 C++ 拓展。
+  - `python/src/infinitensor/converter/` 的 Python 拓展。
+  - 端到端测试文件。
+
+**3. 测试策略与回归范围**
+- **测试策略**：TDD驱动，先写端到端测试，再逐层实现。覆盖常见的 `Conv2d` 和 `LayerNorm` 参数配置。
+
+**4. 预计工作量与优先级**
+- **预计工作量**：3 人日
+- **优先级**：高 (P0)
